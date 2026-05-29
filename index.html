@@ -6,6 +6,8 @@
     <title>메모 앱</title>
     <!-- favicon, og, css framework setting, ga, hostdog -->
     <style>
+      /* https://noonnu.cc/ */
+      /* https://fonts.google.com/selection/embed */
       * {
         box-sizing: border-box;
       }
@@ -31,5 +33,14 @@
       <h1>메모 하러 가기</h1>
       <button>이동</button>
     </div>
+    <script>
+      // DOM 로딩이 다 끝난 다음이므로 굳이 DOMContentLoaded X
+      document.addEventListener("DOMContentLoaded", main);
+
+      // 호이스팅 되므로 함수 선언문을 뒤에다가 잘 써주시면 된다
+      function main() {
+        console.log("DOM 로딩 완료");
+      }
+    </script>
   </body>
 </html>
