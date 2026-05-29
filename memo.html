@@ -63,7 +63,9 @@
       <section id="container" class="center">
         <h1>메모를 남기자!</h1>
         <form id="memoWriter" class="center">
-          <textarea name="memo"></textarea>
+          <!-- validation : 검증 -->
+          <!-- 프런트엔드/브라우저/화면에서의 검증은 모두 회피/조작 -->
+          <textarea name="memo" required></textarea>
           <button>작성</button>
         </form>
         <section id="memoList">
@@ -74,7 +76,10 @@
     <script>
       document.addEventListener("DOMContentLoaded", main);
 
+      // DOM 요소
       const memoWriter = document.querySelector("#memoWriter");
+      const memoList = document.querySelector("#memoList");
+
       // 진입점. entrypoint
       function main() {
         console.log("DOM 로딩 완료");
@@ -85,6 +90,13 @@
       function memoWriterHandler(event) {
         // form의 기본 이벤트를 금지/정지 시킨다
         event.preventDefault();
+        console.log("form 로직 시작");
+        const formData = new FormData(event.target);
+        // console.log(formData);
+        console.log(...formData);
+        const memoBox = document.createElement("div");
+        memoBox.textContent = formData.get("memo");
+        memoList.append(memoBox);
       }
     </script>
   </body>
