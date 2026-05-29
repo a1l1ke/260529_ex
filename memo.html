@@ -71,5 +71,21 @@
         </section>
       </section>
     </section>
+    <script>
+      document.addEventListener("DOMContentLoaded", main);
+
+      const memoWriter = document.querySelector("#memoWriter");
+      // 진입점. entrypoint
+      function main() {
+        console.log("DOM 로딩 완료");
+        memoWriter.addEventListener("submit", memoWriterHandler);
+      }
+      // 1. 일단 함수표현식으로 타입추론을 하면서 작성한다음에
+      // 2. 나중에 꺼내서 아래에 배치
+      function memoWriterHandler(event) {
+        // form의 기본 이벤트를 금지/정지 시킨다
+        event.preventDefault();
+      }
+    </script>
   </body>
 </html>
