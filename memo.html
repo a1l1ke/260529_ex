@@ -109,11 +109,40 @@
         console.log("form 로직 시작");
         const formData = new FormData(event.target);
         // console.log(formData);
-        console.log(...formData);
+        // console.log(...formData);
+        const memoText = formData.get("memo");
+        console.log(memoText);
+
+        // 데이터 추가 시 LocalStorage를 사용해서 영속성(persistence)
+        saveMemo(memoText);
+
         const memoBox = document.createElement("div");
         // memoBox.classList.add
-        memoBox.textContent = formData.get("memo");
+        memoBox.textContent = memoText;
         memoList.append(memoBox);
+      }
+
+      function saveMemo(memoText) {
+        // 가장 최근 메모 1개만 저장하겠다
+        // localStorage.setItem("memo", memoText);
+        // localStorage.setItem("memo", []); // 삭제할 때 불편
+        const prevMemo = localStorage.getItem("memo") ?? {};
+        let memoObj;
+        try {
+          // JSON text -> 객체
+          memoObj = JSON.parse(prevMemo);
+          // localStorage -> origin 공유
+        } catch (err) {
+          console.log(err);
+          memoObj = {};
+        }
+        // 현재 시간을 숫자로 표시한 값
+        const timeKey = Date.now();
+        memoObj[timeKey] = memoText;
+        console.log(memoObj);
+        // localStorage는 문자열 key, value
+        // 제대로 된 문자열 '변환' -> JSON.stringify, parse
+        localStorage.setItem("memo", JSON.stringify(memoObj));
       }
     </script>
   </body>
