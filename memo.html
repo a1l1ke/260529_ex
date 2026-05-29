@@ -100,7 +100,10 @@
       function main() {
         console.log("DOM 로딩 완료");
         memoWriter.addEventListener("submit", memoWriterHandler);
+        // 화면에 표시하면?
+        drawPrevMemo();
       }
+
       // 1. 일단 함수표현식으로 타입추론을 하면서 작성한다음에
       // 2. 나중에 꺼내서 아래에 배치
       function memoWriterHandler(event) {
@@ -116,6 +119,19 @@
         // 데이터 추가 시 LocalStorage를 사용해서 영속성(persistence)
         saveMemo(memoText);
 
+        // 추가할 텍스트
+        // 내가 호출되었을 때의 스코프가 아니라 선언되었을 때의 스코프를 기억한다 -> 렉시컬 스코프
+        // memoList는 기억하는데 memoText 기억 X.
+        drawMemoBox(memoText);
+
+        // const memoBox = document.createElement("div");
+        // // memoBox.classList.add
+        // memoBox.textContent = memoText;
+        // memoList.append(memoBox);
+      }
+
+      //   특정한 텍스트를, 특정한 리스트에 구현해서 넣겠다
+      function drawMemoBox(memoText) {
         const memoBox = document.createElement("div");
         // memoBox.classList.add
         memoBox.textContent = memoText;
@@ -143,6 +159,22 @@
         // localStorage는 문자열 key, value
         // 제대로 된 문자열 '변환' -> JSON.stringify, parse
         localStorage.setItem("memo", JSON.stringify(memoObj));
+      }
+
+      function drawPrevMemo() {
+        // localStorage에서 데이터 빼오기
+        let prevMemo;
+        try {
+          prevMemo = JSON.parse(localStorage.getItem("memo"));
+        } catch {
+          prevMemo = {};
+        }
+        // timeKey : 메모값 -> 배열
+        console.log(prevMemo);
+        // 각각 메모 박스 그리기
+        for (const key in prevMemo) {
+          drawMemoBox(prevMemo[key]);
+        }
       }
     </script>
   </body>
