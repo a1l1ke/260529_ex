@@ -32,6 +32,7 @@
 
       #container {
         flex-direction: column;
+        gap: 12px;
       }
 
       #container h1 {
@@ -78,11 +79,18 @@
     <section id="page" class="center">
       <section id="container" class="center">
         <h1>메모를 남기자!</h1>
+        <a href="index.html">
+          <button>메인으로 가기</button>
+        </a>
         <form id="memoWriter" class="center">
           <!-- validation : 검증 -->
           <!-- 프런트엔드/브라우저/화면에서의 검증은 모두 회피/조작 -->
           <textarea name="memo" required></textarea>
-          <button>작성</button>
+          <div>
+            <button>작성</button>
+            <!-- 폼 자체의 기능(submit)을 안쓰고 자체 click으로 기능을 하겠다 -->
+            <button id="resetBtn" type="button">리셋</button>
+          </div>
         </form>
         <section id="memoList" class="center">
           <!-- 작성된 메모를 배치 -->
@@ -95,11 +103,18 @@
       // DOM 요소
       const memoWriter = document.querySelector("#memoWriter");
       const memoList = document.querySelector("#memoList");
+      const resetBtn = document.querySelector("#resetBtn");
 
       // 진입점. entrypoint
       function main() {
         console.log("DOM 로딩 완료");
         memoWriter.addEventListener("submit", memoWriterHandler);
+        resetBtn.addEventListener("click", () => {
+          // localStorage.clear();
+          // 현재 출처에 있는 모든 localStorage 데이터 X.
+          localStorage.removeItem("memo");
+          drawPrevMemo(); // 재렌더링.
+        });
         // 화면에 표시하면?
         drawPrevMemo();
       }
@@ -130,6 +145,9 @@
         // // memoBox.classList.add
         // memoBox.textContent = memoText;
         // memoList.append(memoBox);
+
+        // 폼 리셋 (남은 폼의 인풋 입력 내역을 지워줌)
+        event.target.reset();
       }
 
       //   특정한 텍스트를, 특정한 리스트에 구현해서 넣겠다
@@ -152,7 +170,17 @@
           // DOM만 지운 것
           memoBox.remove();
         });
+        // 복사 로직
+        const cpBtn = document.createElement("button");
+        cpBtn.textContent = "복사";
+        cpBtn.addEventListener("click", () => {
+          if (confirm("정말 복사하시겠습니까?")) {
+            navigator.clipboard.writeText(memoText);
+            alert("복사 완료");
+          }
+        });
         memoBox.append(rmBtn);
+        memoBox.append(cpBtn);
       }
 
       function saveMemo(memoText) {
@@ -183,7 +211,9 @@
 
       // 로직 분리
       function getPrevMemo() {
-        const prevMemo = localStorage.getItem("memo") ?? {};
+        // const prevMemo = localStorage.getItem("memo") ?? {};
+        const prevMemo = localStorage.getItem("memo") ?? "{}"; // 값이 없으면
+        console.log(prevMemo);
         let memoObj;
         try {
           // JSON text -> 객체
@@ -208,6 +238,8 @@
         // timeKey : 메모값 -> 배열
         console.log(prevMemo);
         // 각각 메모 박스 그리기
+        // 기존에 만약에 memoList에 dom 요소가 있으면 그냥 둠
+        memoList.innerHTML = ""; // 다시 렌더링 시에는 한 번 비우게
         for (const key in prevMemo) {
           drawMemoBox(prevMemo[key], key);
         }
