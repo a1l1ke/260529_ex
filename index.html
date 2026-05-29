@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>메모 앱</title>
     <!-- favicon, og, css framework setting, ga, hostdog -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        /* 100vh 설정 시 스크롤 생기는 이슈 해결 */
+        margin: 0;
+        padding: 0;
+      }
+      /* https://flukeout.github.io/ */
+      /* https://developer.mozilla.org/ko/docs/Web/CSS/Guides/Selectors */
+      /* https://www.w3schools.com/cssref/css_selectors.php */
+      #container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+    </style>
   </head>
   <body>
     <div id="container">
