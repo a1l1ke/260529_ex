@@ -117,12 +117,14 @@
         console.log(memoText);
 
         // 데이터 추가 시 LocalStorage를 사용해서 영속성(persistence)
-        saveMemo(memoText);
+        const id = saveMemo(memoText);
 
         // 추가할 텍스트
         // 내가 호출되었을 때의 스코프가 아니라 선언되었을 때의 스코프를 기억한다 -> 렉시컬 스코프
         // memoList는 기억하는데 memoText 기억 X.
-        drawMemoBox(memoText);
+        // drawMemoBox(memoText);
+        drawMemoBox(memoText, id);
+        // 삭제 때 쓰기 위해 id 전달
 
         // const memoBox = document.createElement("div");
         // // memoBox.classList.add
@@ -131,7 +133,7 @@
       }
 
       //   특정한 텍스트를, 특정한 리스트에 구현해서 넣겠다
-      function drawMemoBox(memoText) {
+      function drawMemoBox(memoText, id) {
         const memoBox = document.createElement("div");
         // memoBox.classList.add
         memoBox.textContent = memoText;
@@ -141,8 +143,14 @@
         rmBtn.textContent = "삭제";
         // 여기서 함수선언/표현을 하면 Lexical Scope로 바깥을 가져올 수 있다는 장점 (대신 관리가 어려워짐)
         rmBtn.addEventListener("click", () => {
-          memoBox.remove(); // DOM만 지운 것
           // localStorage 지우는게 필요
+          const memoObj = getPrevMemo();
+          //   delete memoObj[id];
+          console.log("memoId", id);
+          memoObj[id] = undefined; // JSON.stringfy 삭제 됨
+          localStorage.setItem("memo", JSON.stringify(memoObj));
+          // DOM만 지운 것
+          memoBox.remove();
         });
         memoBox.append(rmBtn);
       }
@@ -151,6 +159,30 @@
         // 가장 최근 메모 1개만 저장하겠다
         // localStorage.setItem("memo", memoText);
         // localStorage.setItem("memo", []); // 삭제할 때 불편
+        // const prevMemo = localStorage.getItem("memo") ?? {};
+        // let memoObj;
+        // try {
+        //   // JSON text -> 객체
+        //   memoObj = JSON.parse(prevMemo);
+        //   // localStorage -> origin 공유
+        // } catch (err) {
+        //   console.log(err);
+        //   memoObj = {};
+        // }
+        const memoObj = getPrevMemo();
+        // 현재 시간을 숫자로 표시한 값
+        const timeKey = Date.now();
+        memoObj[timeKey] = memoText;
+        console.log(memoObj);
+        // localStorage는 문자열 key, value
+        // 제대로 된 문자열 '변환' -> JSON.stringify, parse
+        localStorage.setItem("memo", JSON.stringify(memoObj));
+        // 생성 후 ID(Key) 값 리턴
+        return timeKey;
+      }
+
+      // 로직 분리
+      function getPrevMemo() {
         const prevMemo = localStorage.getItem("memo") ?? {};
         let memoObj;
         try {
@@ -161,28 +193,23 @@
           console.log(err);
           memoObj = {};
         }
-        // 현재 시간을 숫자로 표시한 값
-        const timeKey = Date.now();
-        memoObj[timeKey] = memoText;
-        console.log(memoObj);
-        // localStorage는 문자열 key, value
-        // 제대로 된 문자열 '변환' -> JSON.stringify, parse
-        localStorage.setItem("memo", JSON.stringify(memoObj));
+        return memoObj;
       }
 
       function drawPrevMemo() {
         // localStorage에서 데이터 빼오기
-        let prevMemo;
-        try {
-          prevMemo = JSON.parse(localStorage.getItem("memo"));
-        } catch {
-          prevMemo = {};
-        }
+        // let prevMemo;
+        // try {
+        //   prevMemo = JSON.parse(localStorage.getItem("memo"));
+        // } catch {
+        //   prevMemo = {};
+        // }
+        const prevMemo = getPrevMemo();
         // timeKey : 메모값 -> 배열
         console.log(prevMemo);
         // 각각 메모 박스 그리기
         for (const key in prevMemo) {
-          drawMemoBox(prevMemo[key]);
+          drawMemoBox(prevMemo[key], key);
         }
       }
     </script>
