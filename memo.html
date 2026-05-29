@@ -56,6 +56,22 @@
         /* margin, padding : 위 아래 */
         /* margin, padding : 위 오 아 왼 */
       }
+
+      #memoList {
+        gap: 8px;
+        padding: 8px;
+        flex-wrap: wrap;
+      }
+
+      #memoList div {
+        width: 240px;
+        height: 160px;
+        border: 1px solid gray;
+        border-radius: 8px;
+        padding: 16px;
+        /* https://colorhunt.co/ */
+        background-color: #fff7c5;
+      }
     </style>
   </head>
   <body>
@@ -68,7 +84,7 @@
           <textarea name="memo" required></textarea>
           <button>작성</button>
         </form>
-        <section id="memoList">
+        <section id="memoList" class="center">
           <!-- 작성된 메모를 배치 -->
         </section>
       </section>
@@ -95,6 +111,7 @@
         // console.log(formData);
         console.log(...formData);
         const memoBox = document.createElement("div");
+        // memoBox.classList.add
         memoBox.textContent = formData.get("memo");
         memoList.append(memoBox);
       }
