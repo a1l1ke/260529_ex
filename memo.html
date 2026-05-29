@@ -5,16 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>메모를 남기자!</title>
     <style>
+      /* 전체 공통으로 작동해야하는 태그 수준의 서식 */
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      textarea {
+        resize: none;
+      }
+      /* 반복해서 쓰이는 내용은 클래스로 작성 */
       .center {
         display: flex;
         justify-content: center;
         align-items: center;
       }
-
+      /* id로 특정하게 쓸 요소들에 대한 서식 */
       /* id를 의미하는 선택자 # */
       #page {
         height: 100vh;
         flex-direction: column;
+      }
+
+      #memoWriter {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      #memoWriter button {
+        padding: 8px 16px;
+        /* margin, padding : 전체 */
+        /* margin, padding : 위 아래 */
+        /* margin, padding : 위 오 아 왼 */
       }
     </style>
   </head>
@@ -22,6 +47,10 @@
     <section id="page" class="center">
       <section id="container">
         <h1>메모를 남기자!</h1>
+        <form id="memoWriter" class="center">
+          <textarea name="memo"></textarea>
+          <button>작성</button>
+        </form>
       </section>
     </section>
   </body>
