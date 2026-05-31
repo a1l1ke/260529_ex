@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- await를 async 안에만 써야한다는 제약 X -->
+    <!-- 방법1 -->
+    <script type="module">
+      // 방법2
+      document.addEventListener("DOMContentLoaded", async function () {});
+
+      // new Promise((resolve, reject) => {...})
+      async function myFun1() {}
+      const myFun2 = async function () {};
+      setTimeout(() => console.log("매크로태스크 큐"));
+      const r1 = myFun1();
+      const r2 = myFun2();
+      const r3 = await myFun2().then(() => "r3 (콜스택)");
+      // r2 => 동기적으로 call stack으로 편입
+      // Uncaught SyntaxError: await is only valid in async functions and the top level bodies of modules (at 10_async+await.html:15:18)
+      r1.then(() => console.log("r1 처리 완료 (마이크로태스크 큐)"));
+      console.log("콜 스택");
+      r2.then(() => console.log("r2 처리 완료 (마이크로태스크 큐)"));
+      console.log(r1);
+      console.log(r2);
+      console.log(r3);
+    </script>
+  </body>
+</html>
